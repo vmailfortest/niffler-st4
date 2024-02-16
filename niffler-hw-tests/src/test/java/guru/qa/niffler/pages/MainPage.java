@@ -1,5 +1,6 @@
 package guru.qa.niffler.pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -66,6 +67,11 @@ public class MainPage extends BasePage {
     @Step("Spendings table should have size '{expectedSize}'")
     public void spendingsTableShouldHaveSize(int expectedSize) {
         spendings.shouldHave(size(expectedSize));
+    }
+
+    @Step("Spendings table should have rows")
+    public void spendingsTableShouldHaveRows() {
+        spendings.shouldHave(CollectionCondition.sizeGreaterThan(0));
     }
 
     @Step("check avatar")

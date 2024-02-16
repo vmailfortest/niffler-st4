@@ -28,6 +28,7 @@ public class Lesson12Test extends BaseWebTest {
     @Test
     void spendTableValuesAreCorrect(SpendJson spend) {
 
+        mainPage.spendingsTableShouldHaveRows();
         mainPage.getSpendingTable().checkSpends(spend);
 
     }
