@@ -1,8 +1,10 @@
 package guru.qa.niffler.pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.pages.component.SpendingTable;
 import io.qameta.allure.Step;
 
@@ -17,7 +19,6 @@ import static guru.qa.niffler.condition.PhotoCondition.photoFromClasspath;
 
 public class MainPage extends BasePage {
     private ElementsCollection spendings = $(".spendings-table tbody").$$("tr");
-    private SelenideElement deleteSelectedButton = $(byText("Delete selected"));
 
     private SelenideElement categoryField = $x("//input[contains(@id, 'react-select')]");
     private ElementsCollection categoryValues = $$x("//div[@aria-disabled='false' and contains(@id, 'react-select')]");
@@ -27,6 +28,16 @@ public class MainPage extends BasePage {
     private SelenideElement descriptionField = $("input[name='description']");
 
     private SelenideElement addSpendingButton = $("button[type='submit']");
+
+    private SelenideElement todayFilterBtn = $(byText("Today"));
+    private SelenideElement lastWeekFilterBtn = $(byText("Last week"));
+    private SelenideElement lastMonthFilterBtn = $(byText("Last month"));
+    private SelenideElement allTimeFilterBtn = $(byText("All time"));
+
+    private SelenideElement currencyInput = $x("//div[@class='spendings__buttons']/following-sibling::div");
+    private ElementsCollection currencies = $$x("//div[@aria-disabled='false' and contains(@id, 'react-select')]");
+    private SelenideElement resetFiltersBtn = $(".spendings__filters .button-icon_type_close");
+    private SelenideElement deleteSelectedButton = $(byText("Delete selected"));
 
     DateTimeFormatter spendingDateformatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -57,15 +68,14 @@ public class MainPage extends BasePage {
                 .click();
     }
 
-    @Step("Click Delete Selected button")
-    public void clickDeleteSelectedButton() {
-        deleteSelectedButton.scrollTo();
-        deleteSelectedButton.click();
-    }
-
     @Step("Spendings table should have size '{expectedSize}'")
     public void spendingsTableShouldHaveSize(int expectedSize) {
         spendings.shouldHave(size(expectedSize));
+    }
+
+    @Step("Spendings table should have rows")
+    public void spendingsTableShouldHaveRows() {
+        spendings.shouldHave(CollectionCondition.sizeGreaterThan(0));
     }
 
     @Step("check avatar")
@@ -75,6 +85,43 @@ public class MainPage extends BasePage {
 
     public SpendingTable getSpendingTable() {
         return spendingTable;
+    }
+
+    @Step("Click Today filter btn")
+    public void clickTodayFilterBtn() {
+        todayFilterBtn.click();
+    }
+
+    @Step("Click Last Week filter btn")
+    public void clickLastWeekFilterBtn() {
+        lastWeekFilterBtn.click();
+    }
+
+    @Step("Click Last Month filter btn")
+    public void clickLastMonthFilterBtn() {
+        lastMonthFilterBtn.click();
+    }
+
+    @Step("Click All Time filter btn")
+    public void clickAllTimeFilterBtn() {
+        allTimeFilterBtn.click();
+    }
+
+    @Step("Select Currency filter '{currency}'")
+    public void selectSpendCurrencyFilter(CurrencyValues currency) {
+        currencyInput.click();
+        currencies.findBy(text(currency.name())).click();
+    }
+
+    @Step("Click Reset filters btn")
+    public void clickResetFiltersBtn() {
+        resetFiltersBtn.click();
+    }
+
+    @Step("Click Delete Selected button")
+    public void clickDeleteSelectedButton() {
+        deleteSelectedButton.scrollTo();
+        deleteSelectedButton.click();
     }
 
 }

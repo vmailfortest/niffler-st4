@@ -8,6 +8,7 @@ public enum SuccessMsg implements Msg {
   CATEGORY_MSG("New category added"),
   SPENDING_ADDED_MSG("Spending successfully added"),
   SPENDING_DELETED_MSG("Spendings deleted"),
+  SPENDING_UPDATED_MSG("Spending successfully updated"),
   INVITATION_SENT_MSG("Invitation is sent"),
   INVITATION_ACCEPTED_MSG("Invitation is accepted"),
   INVITATION_DECLINED_MSG("Invitation is declined"),
