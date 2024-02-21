@@ -72,7 +72,7 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
 
         extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), userEntities);
 
-        JsonAttachment.attachJson(user.toFormattedJson());
+        JsonAttachment.attachJson("JSON " + user.getUsername(), user.toFormattedJson());
     }
 
     @Override

@@ -23,8 +23,8 @@ public class JsonAttachment implements AttachmentData {
         return json;
     }
 
-    public static void attachJson(String json) {
-        JsonAttachment jsonAttachment = new JsonAttachment("JSON", json);
+    public static void attachJson(String title, String json) {
+        JsonAttachment jsonAttachment = new JsonAttachment(title, json);
         new DefaultAttachmentProcessor().addAttachment(jsonAttachment, new FreemarkerAttachmentRenderer("json.ftl"));
     }
 
