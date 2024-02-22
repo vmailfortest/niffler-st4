@@ -10,6 +10,9 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$x;
 
 public class FriendsPage extends BasePage {
+
+    public static final String URL = CFG.frontUrl() + "/friends";
+
     private SelenideElement friends = $(".people-content tbody");
 
     private ElementsCollection users = $$x("//tbody/tr/td[2]");

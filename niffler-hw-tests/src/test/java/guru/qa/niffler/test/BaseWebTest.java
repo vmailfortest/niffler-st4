@@ -27,8 +27,4 @@ public abstract class BaseWebTest {
     protected UserApiClient userApiClient = new UserApiClient();
     protected FriendsApiClient friendsApiClient = new FriendsApiClient();
 
-    static {
-        Configuration.browser = "firefox";
-    }
-
 }

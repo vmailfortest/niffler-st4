@@ -18,6 +18,9 @@ import static com.codeborne.selenide.Selenide.*;
 import static guru.qa.niffler.condition.PhotoCondition.photoFromClasspath;
 
 public class MainPage extends BasePage {
+
+    public static final String URL = CFG.frontUrl() + "/main";
+
     private ElementsCollection spendings = $(".spendings-table tbody").$$("tr");
 
     private SelenideElement categoryField = $x("//input[contains(@id, 'react-select')]");

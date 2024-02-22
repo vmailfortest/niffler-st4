@@ -2,7 +2,6 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.pages.message.SuccessMsg;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 import static com.codeborne.selenide.Selenide.open;
 
-public class Lesson12Test extends BaseWebTest {
+public class hw12Test extends BaseWebTest {
 
     @BeforeEach
     void doLogin() {
