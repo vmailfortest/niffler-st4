@@ -2,14 +2,10 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
-import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
-import guru.qa.niffler.jupiter.extension.ContextHolderExtension;
-import guru.qa.niffler.pages.FriendsPage;
+import guru.qa.niffler.jupiter.annotation.DbUser;
 import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith({ContextHolderExtension.class, ApiLoginExtension.class})
 public class hw14Test extends BaseWebTest {
 
     @ApiLogin(username = "duck", password = "12345")
@@ -18,6 +14,15 @@ public class hw14Test extends BaseWebTest {
 
         Selenide.open(MainPage.URL);
         mainPage.spendingsTableShouldHaveRows();
+
+    }
+
+    @ApiLogin(user = @DbUser)
+    @Test
+    void loginDbUserWithApi() {
+
+        Selenide.open(MainPage.URL);
+        mainPage.spendingsTableShouldHaveSize(0);
 
     }
 
