@@ -43,21 +43,34 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
                 DbUser.class
         );
 
-        if (!apiLoginAnnotation.isEmpty() && !apiLoginAnnotation.get().username().isEmpty()){
+        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().handle()) {
             return;
         }
 
+        String username = "";
+        String password = "";
+
+        if (dbUserAnnotation.isPresent() && !dbUserAnnotation.get().username().isEmpty()) {
+            username = dbUserAnnotation.get().username();
+            password = dbUserAnnotation.get().password();
+        }
+
+        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().username().isEmpty()) {
+            username = apiLoginAnnotation.get().user().username();
+            password = apiLoginAnnotation.get().user().password();
+        }
+
         String randomUsername = faker.name().username();
-        if (dbUserAnnotation.isEmpty() || dbUserAnnotation.get().username().isEmpty()){
+        if (username.isEmpty()) {
             userAuth.setUsername(randomUsername);
             userAuth.setPassword("12345");
 
             user.setUsername(randomUsername);
         } else {
-            userAuth.setUsername(dbUserAnnotation.get().username());
-            userAuth.setPassword(dbUserAnnotation.get().password());
+            userAuth.setUsername(username);
+            userAuth.setPassword(password);
 
-            user.setUsername(dbUserAnnotation.get().username());
+            user.setUsername(username);
         }
 
         userAuth.setEnabled(true);
@@ -94,7 +107,7 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
         Map userEntities = extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class);
 
-        if (userEntities == null){
+        if (userEntities == null) {
             return;
         }
 

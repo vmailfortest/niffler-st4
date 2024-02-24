@@ -16,6 +16,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
@@ -37,19 +38,22 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
 
         if (userEntities != null) {
             UserAuthEntity userAuth = (UserAuthEntity) userEntities.get(DbUserExtension.userAuthKey);
+
             username = userAuth.getUsername();
             password = userAuth.getPassword();
         }
 
         // Get from ApiLogin if exists
-        ApiLogin apiLogin = AnnotationSupport.findAnnotation(
+        Optional<ApiLogin> apiLoginAnnotation = AnnotationSupport.findAnnotation(
                 extensionContext.getRequiredTestMethod(),
                 ApiLogin.class
-        ).orElse(null);
+        );
 
-        if (!apiLogin.username().isEmpty()) {
-            username = apiLogin.username();
-            password = apiLogin.password();
+        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().username().isEmpty()) {
+            username = apiLoginAnnotation.get().username();
+            password = apiLoginAnnotation.get().password();
+        } else {
+            return;
         }
 
         // Login with API
