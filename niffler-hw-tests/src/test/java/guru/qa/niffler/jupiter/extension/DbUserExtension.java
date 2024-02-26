@@ -5,6 +5,7 @@ import guru.qa.niffler.db.logging.JsonAttachment;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.UserRepository;
 import guru.qa.niffler.db.repository.UserRepositoryJdbc;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.DbUser;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -32,13 +33,46 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
         UserAuthEntity userAuth = new UserAuthEntity();
         UserEntity user = new UserEntity();
 
-        Optional<DbUser> dbUser = AnnotationSupport.findAnnotation(
+        Optional<ApiLogin> apiLoginAnnotation = AnnotationSupport.findAnnotation(
+                extensionContext.getRequiredTestMethod(),
+                ApiLogin.class
+        );
+
+        Optional<DbUser> dbUserAnnotation = AnnotationSupport.findAnnotation(
                 extensionContext.getRequiredTestMethod(),
                 DbUser.class
         );
 
-        userAuth.setUsername(dbUser.get().username());
-        userAuth.setPassword(dbUser.get().password());
+        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().handle()) {
+            return;
+        }
+
+        String username = "";
+        String password = "";
+
+        if (dbUserAnnotation.isPresent() && !dbUserAnnotation.get().username().isEmpty()) {
+            username = dbUserAnnotation.get().username();
+            password = dbUserAnnotation.get().password();
+        }
+
+        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().username().isEmpty()) {
+            username = apiLoginAnnotation.get().user().username();
+            password = apiLoginAnnotation.get().user().password();
+        }
+
+        String randomUsername = faker.name().username();
+        if (username.isEmpty()) {
+            userAuth.setUsername(randomUsername);
+            userAuth.setPassword("12345");
+
+            user.setUsername(randomUsername);
+        } else {
+            userAuth.setUsername(username);
+            userAuth.setPassword(password);
+
+            user.setUsername(username);
+        }
+
         userAuth.setEnabled(true);
         userAuth.setAccountNonExpired(true);
         userAuth.setAccountNonLocked(true);
@@ -51,17 +85,9 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
                 }).toList()
         );
 
-        user.setUsername(dbUser.get().username());
         user.setCurrency(CurrencyValues.USD);
         user.setFirstname(faker.name().firstName());
         user.setSurname(faker.name().lastName());
-
-        if (dbUser.get().username().isEmpty()){
-            String randomUsername = faker.name().username();
-            userAuth.setUsername(randomUsername);
-            userAuth.setPassword("12345");
-            user.setUsername(randomUsername);
-        }
 
         userRepository.createInAuth(userAuth);
         userRepository.createInUserdata(user);
@@ -80,6 +106,10 @@ public class DbUserExtension implements BeforeEachCallback, AfterEachCallback, P
 
         Map userEntities = extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class);
+
+        if (userEntities == null) {
+            return;
+        }
 
         UserAuthEntity userAuth = (UserAuthEntity) userEntities.get(userAuthKey);
         UserEntity user = (UserEntity) userEntities.get(userdataKey);
