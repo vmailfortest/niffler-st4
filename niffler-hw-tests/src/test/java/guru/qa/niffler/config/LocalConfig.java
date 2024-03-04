@@ -28,4 +28,9 @@ public class LocalConfig implements Config {
     public String jdbcHost() {
         return "localhost";
     }
+
+    @Override
+    public String currencyGrpcHost() {
+        return "localhost";
+    }
 }

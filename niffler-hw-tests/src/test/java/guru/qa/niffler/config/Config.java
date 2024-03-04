@@ -2,7 +2,7 @@ package guru.qa.niffler.config;
 
 public interface Config {
 
-    static Config getInstance(){
+    static Config getInstance() {
         return "docker".equals(System.getProperty("test.env"))
                 ? DockerConfig.instance
                 : LocalConfig.instance;
@@ -14,15 +14,21 @@ public interface Config {
 
     String jdbcHost();
 
-    default String jdbcUser(){
+    String currencyGrpcHost();
+
+    default String jdbcUser() {
         return "postgres";
     }
 
-    default String jdbcPassword(){
+    default String jdbcPassword() {
         return "secret";
     }
 
-    default int jdbcPort(){
+    default int jdbcPort() {
         return 5432;
+    }
+
+    default int currencyGrpcPort() {
+        return 8092;
     }
 }
