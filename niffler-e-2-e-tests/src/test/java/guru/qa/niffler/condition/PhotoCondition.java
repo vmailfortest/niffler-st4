@@ -15,30 +15,31 @@ import java.util.Base64;
 
 public class PhotoCondition {
 
-    public static Condition photoFromClasspath(String expectedPhoto) {
-        return new Condition("photo") {
-            @Nonnull
-            @Override
-            public CheckResult check(Driver driver, WebElement element) {
-                String imageAsBase64 = null;
+  public static Condition photoFromClasspath(String expectedPhoto) {
+    return new Condition("photo") {
+      @Nonnull
+      @Override
+      public CheckResult check(Driver driver, WebElement element) {
+        String imageAsBase64 = null;
 
-                try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(expectedPhoto)) {
-                    imageAsBase64 = new String(Base64.getEncoder().encode(is.readAllBytes()), StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(expectedPhoto)) {
+          imageAsBase64 = new String(Base64.getEncoder().encode(is.readAllBytes()), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
 
-                String src = StringUtils.substringAfter(element.getAttribute("src"), "base64,");
-                boolean matched = src.equals(imageAsBase64);
 
-                return new CheckResult(matched, matched ? "avatars are same" : "avatars are different");
-            }
+        String src = StringUtils.substringAfter(element.getAttribute("src"), "base64,");
+        boolean matched = src.equals(imageAsBase64);
 
-            @Nonnull
-            @Override
-            public Condition negate() {
-                return new Not(this, true);
-            }
-        };
-    }
+        return new CheckResult(matched, matched ? "avatars are same" : "avatars are different");
+      }
+
+      @Nonnull
+      @Override
+      public Condition negate() {
+        return new Not(this, true);
+      }
+    };
+  }
 }
