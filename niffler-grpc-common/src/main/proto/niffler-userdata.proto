@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.niffler.grpc";
+option java_outer_classname = "NifflerUserdataProto";
+
+service NifflerUserdataService {
+  rpc GetUserByUsername (google.protobuf.StringValue) returns (User) {}
+  rpc GetAllUsers (google.protobuf.StringValue) returns (UsersResponse) {}
+  rpc UpdateUser (User) returns (User) {}
+}
+
+message UsersResponse {
+  repeated User allUsers = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string firstname = 3;
+  string surname = 4;
+  string currency = 5;
+  bytes photo = 6;
+  FriendState friendState = 7;
+}
+
+enum FriendState {
+  EMPTY = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
+}
