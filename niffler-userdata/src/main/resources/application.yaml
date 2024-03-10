@@ -4,6 +4,10 @@ server:
     include:
       message: true
 
+grpc:
+  server:
+    port: 8094
+
 spring:
   application:
     name: niffler-userdata
@@ -61,6 +65,11 @@ spring:
     url: 'jdbc:postgresql://localhost:5432/niffler-userdata'
     username: postgres
     password: secret
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://localhost:8094'
+      negotiationType: PLAINTEXT
 niffler-userdata:
   base-uri: 'http://127.0.0.1:8089'
 ---
@@ -82,6 +91,11 @@ spring:
     url: 'jdbc:postgresql://niffler-all-db:5432/niffler-userdata'
     username: postgres
     password: secret
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://localhost:8094'
+      negotiationType: PLAINTEXT
 niffler-userdata:
   base-uri: 'http://userdata.niffler.dc:8089'
 ---
@@ -107,6 +121,11 @@ spring:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://localhost:8094'
+      negotiationType: PLAINTEXT
 niffler-userdata:
   base-uri: ${niffler-userdata.url}
 ---
@@ -132,6 +151,11 @@ spring:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://localhost:8094'
+      negotiationType: PLAINTEXT
 niffler-userdata:
   base-uri: ${niffler-userdata.url}
 ---
