@@ -16,5 +16,5 @@ public @interface GenerateCategory {
 
     String category();
 
-    String username();
+    String username() default "";
 }

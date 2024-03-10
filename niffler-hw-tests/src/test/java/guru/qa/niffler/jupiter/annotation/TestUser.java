@@ -14,4 +14,9 @@ public @interface TestUser {
     String password() default "";
 
     boolean handle() default true;
+
+    GenerateCategory[] categories() default {};
+
+    GenerateSpend[] spends() default {};
+
 }
