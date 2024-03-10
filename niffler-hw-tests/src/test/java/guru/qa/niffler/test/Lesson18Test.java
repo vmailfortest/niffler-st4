@@ -21,8 +21,8 @@ public class Lesson18Test extends BaseWebTest {
     void severalUsers(@User() UserJson user,
                       @User(OUTER) UserJson[] outerUsers) {
 
-        System.out.println("!!!: " + user);
-        System.out.println("!!!-!!!: " + Arrays.toString(outerUsers));
+        System.out.println("USER: " + user);
+        System.out.println("USERS-OUTER: " + Arrays.toString(outerUsers));
 
         Selenide.open(MainPage.URL);
         mainPage.spendingsTableShouldHaveSize(0);
@@ -41,6 +41,8 @@ public class Lesson18Test extends BaseWebTest {
     ))
     @Test
     void userWithCategoriesAndSpends(@User() UserJson user) {
+
+        System.out.println("USER: " + user);
 
         Selenide.open(MainPage.URL);
         mainPage.spendingsTableShouldHaveSize(2);

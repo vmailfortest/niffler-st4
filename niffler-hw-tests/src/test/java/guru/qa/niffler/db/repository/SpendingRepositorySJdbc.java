@@ -2,6 +2,7 @@ package guru.qa.niffler.db.repository;
 
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.Database;
+import guru.qa.niffler.db.model.CategoryEntity;
 import guru.qa.niffler.db.model.SpendEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,8 +20,33 @@ public class SpendingRepositorySJdbc implements SpendingRepository {
     }
 
     @Override
+    public CategoryEntity createCategory(CategoryEntity category) {
+        KeyHolder kh = new GeneratedKeyHolder();
+
+        spendTemplate.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(
+                            "INSERT INTO category " +
+                                    "(category, username) " +
+                                    "VALUES(?, ?);"
+                            , PreparedStatement.RETURN_GENERATED_KEYS
+                    );
+
+                    ps.setString(1, category.getCategory());
+                    ps.setString(2, category.getUsername());
+
+                    return ps;
+                }, kh
+        );
+
+        category.setId((UUID) kh.getKeys().get("id"));
+
+        return category;
+    }
+
+    @Override
     public SpendEntity createSpending(SpendEntity spend) {
-        spend.getCategory().setId(UUID.fromString(getCategoryById(spend)));
+        spend.getCategory().setId(UUID.fromString(getCategoryId(spend.getCategory().getCategory(), spend.getUsername())));
 
         KeyHolder kh = new GeneratedKeyHolder();
 
@@ -49,8 +75,10 @@ public class SpendingRepositorySJdbc implements SpendingRepository {
         return spend;
     }
 
-    private String getCategoryById(SpendEntity spend){
+    @Override
+    public String getCategoryId(String category, String username) {
         return spendTemplate.queryForObject("SELECT id FROM category WHERE category=? AND username=?"
-                , new Object[]{spend.getCategory().getCategory(), spend.getUsername()}, String.class);
+                , new Object[]{category, username}, String.class);
     }
+
 }
