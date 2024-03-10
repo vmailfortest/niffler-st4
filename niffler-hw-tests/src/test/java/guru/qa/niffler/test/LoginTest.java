@@ -8,7 +8,7 @@ import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
 import guru.qa.niffler.db.repository.UserRepository;
 import guru.qa.niffler.jupiter.extension.UserRepositoryExtension;
-import guru.qa.niffler.jupiter.annotation.DbUser;
+import guru.qa.niffler.jupiter.annotation.TestUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ public class LoginTest extends BaseWebTest {
     userRepository.deleteInUserdataById(user.getId());
   }
 
-  @DbUser()
+  @TestUser()
   @Test
   void statisticShouldBeVisibleAfterLogin() {
     Selenide.open("http://127.0.0.1:3000/main");

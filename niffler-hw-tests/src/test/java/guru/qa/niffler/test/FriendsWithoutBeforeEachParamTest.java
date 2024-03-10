@@ -1,14 +1,14 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.UserQueue;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
 import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.jupiter.annotation.User.UserType.*;
+import static guru.qa.niffler.jupiter.annotation.UserQueue.UserType.*;
 
 @ExtendWith(UsersQueueExtension.class)
 public class FriendsWithoutBeforeEachParamTest extends BaseWebTest{
@@ -20,21 +20,21 @@ public class FriendsWithoutBeforeEachParamTest extends BaseWebTest{
     }
 
     @Test
-    void friendsShouldBeDisplayed(@User(WITH_FRIENDS) UserJson user) throws Exception {
+    void friendsShouldBeDisplayed(@UserQueue(WITH_FRIENDS) UserJson user) throws Exception {
         loginPage.login(user.username(), user.testData().password());
         topMenu.clickFriendsTopMenu();
         friendsPage.friendShouldBeDisplayed();
     }
 
     @Test
-    void requestSentShouldBeDisplayed(@User(REQUEST_SENT) UserJson user) throws Exception {
+    void requestSentShouldBeDisplayed(@UserQueue(REQUEST_SENT) UserJson user) throws Exception {
         loginPage.login(user.username(), user.testData().password());
         topMenu.clickPeopleTopMenu();
         peoplePage.requestSentShouldBeDisplayed();
     }
 
     @Test
-    void requestReceivedShouldBeDisplayed(@User(REQUEST_RECEIVED) UserJson user) throws Exception {
+    void requestReceivedShouldBeDisplayed(@UserQueue(REQUEST_RECEIVED) UserJson user) throws Exception {
         loginPage.login(user.username(), user.testData().password());
         topMenu.clickFriendsTopMenu();
         friendsPage.requestReceivedShouldBeDisplayed();

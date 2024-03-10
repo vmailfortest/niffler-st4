@@ -2,11 +2,12 @@ package guru.qa.niffler.test;
 
 import guru.qa.niffler.api.*;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.pages.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith({BrowserExtension.class})
+@WebTest
 public abstract class BaseWebTest {
 
     protected static final Config CFG = Config.getInstance();

@@ -3,7 +3,7 @@ package guru.qa.niffler.test.hw11;
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.db.model.UserAuthEntity;
-import guru.qa.niffler.jupiter.annotation.DbUser;
+import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.pages.message.ErrorMsg;
 import guru.qa.niffler.pages.message.SuccessMsg;
@@ -18,7 +18,7 @@ public class hw11ProfileTest extends BaseWebTest {
     private final static String tester1 = "tester1";
     private final static String tester2 = "tester2";
 
-    @DbUser()
+    @TestUser()
     @BeforeEach
     public void beforeEach(UserAuthEntity userAuth){
         Selenide.open("http://127.0.0.1:3000/main");
@@ -26,7 +26,7 @@ public class hw11ProfileTest extends BaseWebTest {
 //        loginPage.login(userAuth.getUsername(), "12345");
     }
 
-    @DbUser()
+    @TestUser()
     @Test
     void createCategory(UserAuthEntity userAuth) {
 
@@ -39,7 +39,7 @@ public class hw11ProfileTest extends BaseWebTest {
         profilePage.checkMessage(SuccessMsg.CATEGORY_MSG);
     }
 
-    @DbUser()
+    @TestUser()
     @Test
     void createExistingCategory(UserAuthEntity userAuth) {
 
@@ -56,7 +56,7 @@ public class hw11ProfileTest extends BaseWebTest {
         profilePage.checkMessage(ErrorMsg.CATEGORY_MSG);
     }
 
-    @DbUser()
+    @TestUser()
     @Test
     void setProfileData(UserAuthEntity userAuth) throws IOException {
 

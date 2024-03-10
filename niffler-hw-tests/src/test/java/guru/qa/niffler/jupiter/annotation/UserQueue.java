@@ -5,12 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ApiLogin {
-    String username() default "";
+public @interface UserQueue {
 
-    String password() default "";
+    UserType value() default UserType.COMMON;
 
-    TestUser user() default @TestUser(handle = false);
+    enum UserType {
+        WITH_FRIENDS, COMMON, REQUEST_SENT, REQUEST_RECEIVED
+    }
 }

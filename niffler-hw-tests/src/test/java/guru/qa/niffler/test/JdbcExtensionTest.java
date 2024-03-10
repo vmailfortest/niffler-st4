@@ -2,7 +2,7 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.model.UserAuthEntity;
-import guru.qa.niffler.jupiter.annotation.DbUser;
+import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.extension.UserRepositoryExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ExtendWith(UserRepositoryExtension.class)
 public class JdbcExtensionTest extends BaseWebTest {
 
-    @DbUser(username = "valentin_1a", password = "12345")
+    @TestUser(username = "valentin_1a", password = "12345")
     @Test
     void statisticShouldBeVisibleAfterLogin(UserAuthEntity userAuth) {
         System.out.println(userAuth.toString());
@@ -25,7 +25,7 @@ public class JdbcExtensionTest extends BaseWebTest {
         $(".main-content__section-stats").should(visible);
     }
 
-    @DbUser()
+    @TestUser()
     @Test
     void statisticShouldBeVisibleAfterLoginEmptyDbUser(UserAuthEntity userAuth) {
         System.out.println(userAuth.toString());

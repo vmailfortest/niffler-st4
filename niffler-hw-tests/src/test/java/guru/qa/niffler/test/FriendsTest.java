@@ -1,20 +1,20 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.UserQueue;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
 import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.jupiter.annotation.User.UserType.*;
+import static guru.qa.niffler.jupiter.annotation.UserQueue.UserType.*;
 
 @ExtendWith(UsersQueueExtension.class)
 public class FriendsTest extends BaseWebTest {
 
     @BeforeEach
-    void doLogin(@User(WITH_FRIENDS) UserJson user) {
+    void doLogin(@UserQueue(WITH_FRIENDS) UserJson user) {
         System.out.println("user0: " + user.username());
         Selenide.open("http://127.0.0.1:3000/main");
         welcomePage.clickLoginLink();
@@ -22,22 +22,22 @@ public class FriendsTest extends BaseWebTest {
     }
 
     @Test
-    void friendsTableShouldNotBeEmpty0(@User(WITH_FRIENDS) UserJson user) throws Exception {
+    void friendsTableShouldNotBeEmpty0(@UserQueue(WITH_FRIENDS) UserJson user) throws Exception {
         Thread.sleep(3000);
     }
 
     @Test
-    void friendsTableShouldNotBeEmpty1(@User(WITH_FRIENDS) UserJson user) throws Exception {
+    void friendsTableShouldNotBeEmpty1(@UserQueue(WITH_FRIENDS) UserJson user) throws Exception {
         Thread.sleep(3000);
     }
 
     @Test
-    void friendsTableShouldNotBeEmpty2(@User(WITH_FRIENDS) UserJson user) throws Exception {
+    void friendsTableShouldNotBeEmpty2(@UserQueue(WITH_FRIENDS) UserJson user) throws Exception {
         Thread.sleep(3000);
     }
 
     @Test
-    void friendsShouldBeDisplayed(@User(WITH_FRIENDS) UserJson user) {
+    void friendsShouldBeDisplayed(@UserQueue(WITH_FRIENDS) UserJson user) {
         topMenu.clickFriendsTopMenu();
         friendsPage.friendShouldBeDisplayed();
     }
@@ -48,7 +48,7 @@ public class FriendsTest extends BaseWebTest {
     }
 
     @Test
-    void testWithSeveralParam(@User(REQUEST_SENT) UserJson userSent, @User(REQUEST_RECEIVED) UserJson userReceived) {
+    void testWithSeveralParam(@UserQueue(REQUEST_SENT) UserJson userSent, @UserQueue(REQUEST_RECEIVED) UserJson userReceived) {
         System.out.println("user1: " + userSent.username());
         System.out.println("user2: " + userReceived.username());
     }

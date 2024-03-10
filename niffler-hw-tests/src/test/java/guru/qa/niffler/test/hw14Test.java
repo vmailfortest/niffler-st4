@@ -3,15 +3,18 @@ package guru.qa.niffler.test;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
-import guru.qa.niffler.jupiter.annotation.DbUser;
+import guru.qa.niffler.jupiter.annotation.TestUser;
+import guru.qa.niffler.jupiter.annotation.TestUsers;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.jupiter.extension.ContextHolderExtension;
-import guru.qa.niffler.jupiter.extension.DbUserExtension;
+import guru.qa.niffler.jupiter.extension.DatabaseCreateUserExtension;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith({ContextHolderExtension.class, DbUserExtension.class, ApiLoginExtension.class})
+@ExtendWith({ContextHolderExtension.class, DatabaseCreateUserExtension.class, ApiLoginExtension.class})
 public class hw14Test extends BaseWebTest {
 
     @ApiLogin(username = "duck", password = "12345")
@@ -23,7 +26,7 @@ public class hw14Test extends BaseWebTest {
 
     }
 
-    @ApiLogin(user = @DbUser)
+    @ApiLogin(user = @TestUser)
     @Test
     void loginDbUserWithApi() {
 
@@ -32,7 +35,7 @@ public class hw14Test extends BaseWebTest {
 
     }
 
-    @ApiLogin(user = @DbUser(username = "hw14tester", password = "12345"))
+    @ApiLogin(user = @TestUser(username = "hw14tester", password = "12345"))
     @Test
     void loginDbUserWithCredsWithApi() {
 
@@ -41,7 +44,7 @@ public class hw14Test extends BaseWebTest {
 
     }
 
-    @DbUser(username = "testUser", password = "12345")
+    @TestUser(username = "testUser", password = "12345")
     @Test
     void dbUserWithCreds(UserAuthEntity userAuth) {
         Selenide.open(CFG.frontUrl());
@@ -52,12 +55,12 @@ public class hw14Test extends BaseWebTest {
 
     }
 
-    @DbUser()
+    @TestUser
     @Test
-    void dbUserWithGeneratedCreds(UserAuthEntity userAuth) {
+    void dbUserWithGeneratedCreds(@User(User.Point.OUTER) UserJson user) {
         Selenide.open(CFG.frontUrl());
         welcomePage.clickLoginLink();
-        loginPage.login(userAuth.getUsername(), userAuth.getPassword());
+        loginPage.login(user.username(), user.testData().password());
 
         mainPage.spendingsTableShouldHaveSize(0);
 

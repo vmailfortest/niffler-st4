@@ -2,7 +2,7 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.model.UserAuthEntity;
-import guru.qa.niffler.jupiter.annotation.DbUser;
+import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.annotation.GenerateCategory;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.jupiter.extension.UserRepositoryExtension;
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(UserRepositoryExtension.class)
-public class DbUserTest extends BaseWebTest {
+public class TestUserTest extends BaseWebTest {
 
     private final String testUser = "testUser";
     private final String testCategory = "testCategory";
 
-    @DbUser(username = testUser, password = "12345")
+    @TestUser(username = testUser, password = "12345")
     @GenerateCategory(
             category = testCategory,
             username = testUser
