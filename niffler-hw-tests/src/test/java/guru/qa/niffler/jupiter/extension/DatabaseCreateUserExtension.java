@@ -1,34 +1,32 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.github.javafaker.Faker;
-import guru.qa.niffler.db.logging.JsonAttachment;
 import guru.qa.niffler.db.model.*;
+import guru.qa.niffler.db.repository.SpendingRepository;
+import guru.qa.niffler.db.repository.SpendingRepositorySJdbc;
 import guru.qa.niffler.db.repository.UserRepository;
-import guru.qa.niffler.db.repository.UserRepositoryJdbc;
-import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.db.repository.UserRepositorySJdbc;
+import guru.qa.niffler.jupiter.annotation.GenerateCategory;
+import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.utils.DataUtils;
-import org.junit.jupiter.api.extension.*;
-import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Date;
+import java.util.UUID;
 
 public class DatabaseCreateUserExtension extends CreateUserExtension {
 
     public static final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(DatabaseCreateUserExtension.class);
 
-    Faker faker = new Faker();
-
     static String userAuthKey = "userAuth";
     static String userdataKey = "userdata";
 
-    private UserRepository userRepository = new UserRepositoryJdbc();
+    private UserRepository userRepository = new UserRepositorySJdbc();
+    private SpendingRepository spendRepository = new SpendingRepositorySJdbc();
 
     @Override
     public UserJson createUser(TestUser user) {
@@ -79,116 +77,41 @@ public class DatabaseCreateUserExtension extends CreateUserExtension {
 
     @Override
     public UserJson createCategory(TestUser user, UserJson createdUser) {
-        return null;
+
+        for (GenerateCategory category : user.categories()) {
+            CategoryEntity categoryEntity = new CategoryEntity();
+            categoryEntity.setCategory(category.category());
+            categoryEntity.setUsername(createdUser.username());
+
+            spendRepository.createCategory(categoryEntity);
+        }
+
+        return createdUser;
     }
 
     @Override
     public UserJson createSpend(TestUser user, UserJson createdUser) {
-        return null;
-    }
+        for (GenerateSpend spend : user.spends()) {
 
-//    @Override
-//    public void beforeEach(ExtensionContext extensionContext) throws Exception {
-//
-//        UserAuthEntity userAuth = new UserAuthEntity();
-//        UserEntity user = new UserEntity();
-//
-//        Optional<ApiLogin> apiLoginAnnotation = AnnotationSupport.findAnnotation(
-//                extensionContext.getRequiredTestMethod(),
-//                ApiLogin.class
-//        );
-//
-//        Optional<TestUser> dbUserAnnotation = AnnotationSupport.findAnnotation(
-//                extensionContext.getRequiredTestMethod(),
-//                TestUser.class
-//        );
-//
-//        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().handle()) {
-//            return;
-//        }
-//
-//        String username = "";
-//        String password = "";
-//
-//        if (dbUserAnnotation.isPresent() && !dbUserAnnotation.get().username().isEmpty()) {
-//            username = dbUserAnnotation.get().username();
-//            password = dbUserAnnotation.get().password();
-//        }
-//
-//        if (apiLoginAnnotation.isPresent() && !apiLoginAnnotation.get().user().username().isEmpty()) {
-//            username = apiLoginAnnotation.get().user().username();
-//            password = apiLoginAnnotation.get().user().password();
-//        }
-//
-//        String randomUsername = faker.name().username();
-//        if (username.isEmpty()) {
-//            userAuth.setUsername(randomUsername);
-//            userAuth.setPassword("12345");
-//
-//            user.setUsername(randomUsername);
-//        } else {
-//            userAuth.setUsername(username);
-//            userAuth.setPassword(password);
-//
-//            user.setUsername(username);
-//        }
-//
-//        userAuth.setEnabled(true);
-//        userAuth.setAccountNonExpired(true);
-//        userAuth.setAccountNonLocked(true);
-//        userAuth.setCredentialsNonExpired(true);
-//        userAuth.setAuthorities(Arrays.stream(Authority.values())
-//                .map(e -> {
-//                    AuthorityEntity ae = new AuthorityEntity();
-//                    ae.setAuthority(e);
-//                    return ae;
-//                }).toList()
-//        );
-//
-//        user.setCurrency(CurrencyValues.USD);
-//        user.setFirstname(faker.name().firstName());
-//        user.setSurname(faker.name().lastName());
-//
-//        userRepository.createInAuth(userAuth);
-//        userRepository.createInUserdata(user);
-//
-//        Map<String, Object> userEntities = new HashMap<>();
-//        userEntities.put(userAuthKey, userAuth);
-//        userEntities.put(userdataKey, user);
-//
-//        extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), userEntities);
-//
-//        JsonAttachment.attachJson("JSON " + user.getUsername(), user.toFormattedJson());
-//    }
-//
-//    @Override
-//    public void afterEach(ExtensionContext extensionContext) throws Exception {
-//
-//        Map userEntities = extensionContext.getStore(NAMESPACE)
-//                .get(extensionContext.getUniqueId(), Map.class);
-//
-//        if (userEntities == null) {
-//            return;
-//        }
-//
-//        UserAuthEntity userAuth = (UserAuthEntity) userEntities.get(userAuthKey);
-//        UserEntity user = (UserEntity) userEntities.get(userdataKey);
-//
-//        userRepository.deleteInAuthById(userAuth.getId());
-//        userRepository.deleteInUserdataById(user.getId());
-//    }
-//
-//    @Override
-//    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-//        return parameterContext.getParameter().getType().isAssignableFrom(UserAuthEntity.class);
-//    }
-//
-//    @Override
-//    public UserAuthEntity resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-//        Map userEntities = extensionContext.getStore(NAMESPACE)
-//                .get(extensionContext.getUniqueId(), Map.class);
-//
-//        return (UserAuthEntity) userEntities.get(userAuthKey);
-//    }
+            CategoryEntity categoryEntity = new CategoryEntity();
+            categoryEntity.setCategory(spend.category());
+            categoryEntity.setUsername(spend.username());
+            String categoryId = spendRepository.getCategoryId(spend.category(), spend.username());
+            categoryEntity.setId(UUID.fromString(categoryId));
+
+            SpendEntity spendEntity = new SpendEntity();
+            spendEntity.setUsername(createdUser.username());
+            spendEntity.setCategory(categoryEntity);
+            spendEntity.setCurrency(spend.currency());
+            spendEntity.setSpendDate(new Date());
+            spendEntity.setAmount(spend.amount());
+            spendEntity.setDescription(spend.description());
+            spendEntity.setCategory(categoryEntity);
+
+            spendRepository.createSpending(spendEntity);
+        }
+
+        return createdUser;
+    }
 
 }

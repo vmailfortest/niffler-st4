@@ -1,10 +1,7 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.annotation.ApiLogin;
-import guru.qa.niffler.jupiter.annotation.TestUser;
-import guru.qa.niffler.jupiter.annotation.TestUsers;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.*;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
@@ -21,14 +18,34 @@ public class Lesson18Test extends BaseWebTest {
     })
     @ApiLogin(user = @TestUser)
     @Test
-    void loginWithApi(@User() UserJson user,
+    void severalUsers(@User() UserJson user,
                       @User(OUTER) UserJson[] outerUsers) {
 
-        System.out.println("!!!: " + user);
-        System.out.println("!!!-!!!: " + Arrays.toString(outerUsers));
+        System.out.println("USER: " + user);
+        System.out.println("USERS-OUTER: " + Arrays.toString(outerUsers));
 
         Selenide.open(MainPage.URL);
         mainPage.spendingsTableShouldHaveSize(0);
+
+    }
+
+    @ApiLogin(user = @TestUser(
+            categories = {
+                    @GenerateCategory(category = "testCat-1"),
+                    @GenerateCategory(category = "testCat-2")
+            },
+            spends = {
+                    @GenerateSpend(category = "testCat-1", amount = 11d, description = "testSpend-1"),
+                    @GenerateSpend(category = "testCat-2", amount = 12d, description = "testSpend-2"),
+            }
+    ))
+    @Test
+    void userWithCategoriesAndSpends(@User() UserJson user) {
+
+        System.out.println("USER: " + user);
+
+        Selenide.open(MainPage.URL);
+        mainPage.spendingsTableShouldHaveSize(2);
 
     }
 

@@ -1,10 +1,12 @@
 package guru.qa.niffler.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import guru.qa.niffler.api.cookie.ThreadSafeCookieManager;
 import guru.qa.niffler.api.interceptor.CodeInterceptor;
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -49,4 +51,19 @@ public class AuthApiClient extends RestClient {
         final String token = responseBody.get("id_token").asText();
         ApiLoginExtension.setToken(context, token);
     }
+
+    public void doRegister(String username, String password) throws IOException {
+
+        authApi.registerGet().execute();
+        final String XSRF_TOKEN = ThreadSafeCookieManager.INSTANCE.getCookieValue("XSRF-TOKEN");
+        authApi.registerPost(
+                "XSRF-TOKEN=" + XSRF_TOKEN,
+                username,
+                password,
+                password,
+                XSRF_TOKEN
+        ).execute();
+
+    }
+
 }

@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @ExtendWith({DatabaseSpendExtension.class, SpendResolverExtension.class})
 public @interface GenerateSpend {
 
-  String username();
+  String username() default "";
 
   String description();
 
@@ -25,5 +25,5 @@ public @interface GenerateSpend {
 
   double amount();
 
-  CurrencyValues currency();
+  CurrencyValues currency() default CurrencyValues.USD;
 }

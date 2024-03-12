@@ -5,18 +5,10 @@ import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.annotation.TestUsers;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.UserJson;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class CreateUserExtension implements BeforeEachCallback, ParameterResolver {
 
@@ -38,7 +30,11 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
         for (Map.Entry<User.Point, List<TestUser>> userInfo : usersForTest.entrySet()) {
             List<UserJson> usersForPoint = new ArrayList<>();
             for (TestUser testUser : userInfo.getValue()) {
-                usersForPoint.add(createUser(testUser));
+                UserJson createdUser = createUser(testUser);
+                usersForPoint.add(createdUser);
+
+                createCategory(testUser, createdUser);
+                createSpend(testUser, createdUser);
             }
             createdUsers.put(userInfo.getKey(), usersForPoint);
         }
@@ -67,7 +63,7 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
     }
 
     private Map<User.Point, List<TestUser>> extractUsersForTest(ExtensionContext context) {
-        
+
         Map<User.Point, List<TestUser>> result = new HashMap<>();
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ApiLogin.class).ifPresent(
                 apiLogin -> {
