@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.hw11;
+package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.pages.message.SuccessMsg;
-import guru.qa.niffler.test.BaseWebTest;
+import guru.qa.niffler.test.web.BaseWebTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

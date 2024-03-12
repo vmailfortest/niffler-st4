@@ -1,7 +1,7 @@
-package guru.qa.niffler.test.hw11;
+package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.test.BaseWebTest;
+import guru.qa.niffler.test.web.BaseWebTest;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

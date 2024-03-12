@@ -1,11 +1,9 @@
-package guru.qa.niffler.test;
+package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.api.*;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.pages.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 @WebTest
 public abstract class BaseWebTest {

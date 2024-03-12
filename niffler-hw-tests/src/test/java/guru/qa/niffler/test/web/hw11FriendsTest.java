@@ -1,9 +1,9 @@
-package guru.qa.niffler.test.hw11;
+package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.model.FriendJson;
 import guru.qa.niffler.pages.message.SuccessMsg;
-import guru.qa.niffler.test.BaseWebTest;
+import guru.qa.niffler.test.web.BaseWebTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
