@@ -19,4 +19,6 @@ public @interface TestUser {
 
     GenerateSpend[] spends() default {};
 
+    TestFriend[] friends() default {};
+
 }
