@@ -9,6 +9,8 @@ import guru.qa.niffler.model.gql.GqlUser;
 import guru.qa.niffler.model.gql.GqlUsers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class GqlUsersTest extends BaseGraphQLTest {
 
@@ -52,7 +54,7 @@ public class GqlUsersTest extends BaseGraphQLTest {
             }
     ))
     @Test
-    void TwoFriendsSubqueryReturnsError(@User UserJson testUser,
+    void twoFriendsSubqueryReturnsError(@User UserJson testUser,
                                         @Token String bearerToken,
                                         @GqlRequestFile("gql/getFriends2FriendsSubQuery.json") guru.qa.niffler.model.gql.GqlRequest request) throws Exception {
 
@@ -70,7 +72,7 @@ public class GqlUsersTest extends BaseGraphQLTest {
             }
     ))
     @Test
-    void TwoInvitationsSubqueryReturnsError(@User UserJson testUser,
+    void twoInvitationsSubqueryReturnsError(@User UserJson testUser,
                                             @Token String bearerToken,
                                             @GqlRequestFile("gql/getFriends2InvitationsSubQuery.json") guru.qa.niffler.model.gql.GqlRequest request) throws Exception {
 
@@ -113,6 +115,33 @@ public class GqlUsersTest extends BaseGraphQLTest {
         Assertions.assertEquals(
                 CurrencyValues.EUR,
                 response.getData().getUpdateUser().getCurrency()
+        );
+    }
+
+    @CsvSource({
+            "gql/getFriends2FriendsSubQuery.json",
+            "gql/getFriends2InvitationsSubQuery.json"
+    }
+    )
+    @ApiLogin(user = @TestUser(
+            friends = {
+                    @TestFriend(friendState = FriendState.FRIEND),
+                    @TestFriend(friendState = FriendState.INVITE_RECEIVED)
+            }
+    ))
+    @ParameterizedTest
+    void parametrizedTestShouldWork(
+            @GqlRequestFile guru.qa.niffler.model.gql.GqlRequest request,
+            @Token String bearerToken) throws Exception {
+
+        final GqlUser response = gatewayGqlApiClient.getUsersWithError(bearerToken, request);
+
+        Assertions.assertEquals(
+                1,
+                response.getErrors().size()
+        );
+        Assertions.assertTrue(
+                response.getErrors().get(0).message().contains("Can`t fetch over 2")
         );
     }
 
