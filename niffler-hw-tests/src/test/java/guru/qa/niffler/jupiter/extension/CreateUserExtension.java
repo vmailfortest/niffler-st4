@@ -21,6 +21,8 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
 
     public abstract UserJson createSpend(TestUser user, UserJson createdUser);
 
+    public abstract UserJson createFriend(TestUser user, UserJson createdUser);
+
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
 
@@ -35,6 +37,7 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
 
                 createCategory(testUser, createdUser);
                 createSpend(testUser, createdUser);
+                createFriend(testUser, createdUser);
             }
             createdUsers.put(userInfo.getKey(), usersForPoint);
         }

@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.*;
+import guru.qa.niffler.model.FriendState;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,23 @@ public class Lesson18Test extends BaseWebTest {
 
         Selenide.open(MainPage.URL);
         mainPage.spendingsTableShouldHaveSize(2);
+
+    }
+
+    @ApiLogin(user = @TestUser(
+            friends = {
+                    @TestFriend(friendState = FriendState.FRIEND),
+                    @TestFriend(friendState = FriendState.INVITE_SENT),
+                    @TestFriend(friendState = FriendState.INVITE_RECEIVED)
+            }
+    ))
+    @Test
+    void userWithFriends(@User() UserJson user) {
+
+        System.out.println("USER: " + user);
+
+        Selenide.open(MainPage.URL);
+        mainPage.spendingsTableShouldHaveSize(0);
 
     }
 

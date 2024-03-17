@@ -114,4 +114,9 @@ public class DatabaseCreateUserExtension extends CreateUserExtension {
         return createdUser;
     }
 
+    @Override
+    public UserJson createFriend(TestUser user, UserJson createdUser) {
+        throw new RuntimeException("DB createFriend is not implemented.");
+    }
+
 }
