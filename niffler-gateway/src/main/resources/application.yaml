@@ -17,7 +17,11 @@ logging:
     net.devh.boot.grpc: DEBUG
 #    org.springframework.boot.autoconfigure: DEBUG
 
-niffler-userdata.client: soap
+  file:
+    name: 'gateway.log'
+
+niffler-userdata:
+  client: soap
 
 ---
 spring:
