@@ -160,9 +160,9 @@ services:
       - test-network
     dns_search: .
 
-  niffler-e-2-e:
-    container_name: niffler-e-2-e
-    image: ${PREFIX}/niffler-e-2-e-tests:latest
+  niffler-hw:
+    container_name: niffler-hw
+    image: vmailfortest/niffler-hw-tests:latest
     depends_on:
       frontend.niffler.dc:
         condition: service_started
@@ -174,7 +174,7 @@ services:
     container_name: allure
     image: frankescobar/allure-docker-service
     depends_on:
-      - niffler-e-2-e
+      - niffler-hw
     environment:
       CHECK_RESULTS_EVERY_SECONDS: 3
       KEEP_HISTORY: 0
