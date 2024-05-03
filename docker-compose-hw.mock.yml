@@ -110,14 +110,15 @@ services:
 
   userdata.niffler.dc:
     container_name: userdata.niffler.dc
-    image: ${PREFIX}/niffler-userdata-${PROFILE}:latest
-    expose:
-      - "8089"
-    depends_on:
-      auth.niffler.dc:
-        condition: service_healthy
+    image: wiremock/wiremock:2.35.0
+    ports:
+      - "8089:8089"
+    restart: always
     networks:
       - test-network
+    command: [ "--port", "8089", "--global-response-templating", "--enable-stub-cors" ]
+    volumes:
+      - ./wiremock/rest:/home/wiremock
     dns_search: .
 
   frontend.niffler.dc:
@@ -134,7 +135,7 @@ services:
 
   selenoid:
     container_name: selenoid
-    image: aerokube/selenoid:1.11.0
+    image: aerokube/selenoid:latest
     platform: "${ARCH}"
     volumes:
       - ./selenoid:/etc/selenoid
@@ -160,9 +161,9 @@ services:
       - test-network
     dns_search: .
 
-  niffler-e-2-e:
-    container_name: niffler-e-2-e
-    image: ${PREFIX}/niffler-e-2-e-tests:latest
+  niffler-hw:
+    container_name: niffler-hw
+    image: vmailfortest/niffler-hw-tests:latest
     depends_on:
       frontend.niffler.dc:
         condition: service_started
@@ -174,7 +175,7 @@ services:
     container_name: allure
     image: frankescobar/allure-docker-service
     depends_on:
-      - niffler-e-2-e
+      - niffler-hw
     environment:
       CHECK_RESULTS_EVERY_SECONDS: 3
       KEEP_HISTORY: 0
